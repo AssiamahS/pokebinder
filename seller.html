@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Payout math</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
-    <p class="eyebrow">Seller notes · not linked from the binder</p>
+  <header class="hero plain">
     <h1>Payout math</h1>
-    <p class="lede">What the available cards would net through each way out, from live market prices. Estimates: check each platform's fee page before you commit.</p>
-    <nav><a href="./">Back to the binder</a></nav>
+    <p class="lede" style="max-width:52ch">What the cards still for sale would net through each way out, from live market prices. These are estimates, so check each platform's fee page before you commit.</p>
+    <p class="hero-links"><a class="quiet" href="./">Back to the binder</a></p>
   </header>
   <main>
     <p class="fine">Market value of available cards</p>
@@ -24,7 +24,7 @@
         <tbody id="routes"></tbody>
       </table>
     </div>
-    <h2 style="margin-top:40px">Card by card</h2>
+    <h2 class="gap">Card by card</h2>
     <p class="fine">eBay takes about 15% all in, so a $100 card listed at $100 nets about $85. To walk away with full market, list at the last column. A shop paying 70% cash hands you $70 today.</p>
     <div class="table-wrap">
       <table>
@@ -54,7 +54,7 @@
       document.getElementById('basis').textContent =
         `${priced.length} of ${live.length} available listings have a market price. Graded cards are valued at the raw price here, so slabs are understated.`;
       document.getElementById('cards').innerHTML = priced.map(c => `<tr>
-        <td>${esc(c.name)} <span style="color:var(--muted)">${esc(c.grade || c.condition || '')}</span></td>
+        <td>${esc(c.name)} <span style="color:var(--soft)">${esc(c.grade || c.condition || '')}</span></td>
         <td class="num">${usd(c.market)}</td>
         <td class="num">${usd(c.market * 0.5)} to ${usd(c.market * 0.7)}</td>
         <td class="num">${usd(c.market * EBAY_KEEP)}</td>

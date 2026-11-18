@@ -3,69 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Binder</title>
-  <meta name="description" content="A personal Pokemon card collection for sale. Real cards, real photos on request, checkout through eBay or direct offer.">
+  <title>The binder</title>
+  <meta name="description" content="A personal Pokemon card collection for sale. Real cards, photos on request, checkout through eBay or direct offer.">
+  <meta name="theme-color" content="#131c4a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
-    <p class="eyebrow">Personal collection · for sale</p>
-    <h1 id="owner">The Binder</h1>
-    <p id="tagline" class="lede"></p>
-    <p id="sample" class="banner" hidden>Sample cards shown. The real inventory goes in <code>cards.json</code>.</p>
-    <nav>
-      <a href="#binder">Binder</a>
-      <a href="#how">How buying works</a>
-      <a id="ebay" href="#" target="_blank" rel="noopener" hidden>eBay feedback</a>
-    </nav>
+  <header class="hero">
+    <div class="hero-text">
+      <p id="sample" class="sample" hidden>Sample cards for now. The real collection is on its way.</p>
+      <h1 id="owner">The binder</h1>
+      <p id="tagline" class="lede"></p>
+      <p class="hero-links">
+        <a class="btn" href="#binder">Open the binder</a>
+        <a class="quiet" href="#how">How buying works</a>
+        <a class="quiet" id="ebay" href="#" target="_blank" rel="noopener" hidden>eBay feedback</a>
+      </p>
+    </div>
+    <div id="fan" class="fan" aria-label="Most valuable cards in the binder"></div>
   </header>
 
   <main>
-    <section id="binder">
+    <section id="binder" class="binder">
       <div class="tools">
-        <input id="q" type="search" placeholder="Search name, set, grade" aria-label="Search cards">
-        <select id="show" aria-label="Show">
-          <option value="available">Available</option>
-          <option value="sold">Sold</option>
-          <option value="all">All</option>
-        </select>
+        <div class="seg" role="group" aria-label="Show">
+          <button type="button" data-show="available" aria-pressed="true">For sale</button>
+          <button type="button" data-show="sold" aria-pressed="false">Sold</button>
+          <button type="button" data-show="all" aria-pressed="false">Everything</button>
+        </div>
+        <input id="q" type="search" placeholder="Search by name, set or grade" aria-label="Search cards">
         <select id="sort" aria-label="Sort">
-          <option value="price">Price, high to low</option>
-          <option value="name">Name</option>
+          <option value="price">Highest price first</option>
+          <option value="name">A to Z</option>
         </select>
-        <span id="count"></span>
       </div>
-      <div id="grid" class="grid"><p class="empty">Loading the binder…</p></div>
-      <p class="fine">Market = TCGplayer market price for the print, refreshed about twice a day via TCGdex. It is a reference, not the asking price, and it assumes Near Mint.</p>
+      <div id="grid" class="sheet"><p class="empty">Opening the binder…</p></div>
+      <p class="fine"><span id="count"></span> Tap a card for condition, photos and what it last sold for. Market price is the TCGplayer market price for a Near Mint copy, updated about twice a day.</p>
     </section>
 
     <section id="how" class="how">
       <h2>How buying works</h2>
-      <div class="cols">
-        <div>
-          <h3>1. Pick a card</h3>
-          <p>Cards with an eBay listing check out on eBay, with eBay's money back guarantee. Everything else is by direct offer.</p>
-        </div>
-        <div>
-          <h3>2. See it first</h3>
-          <p>Ask for front, back and corner photos, or a timestamped photo with your name on a note. Graded cards come with the cert number so you can look it up.</p>
-        </div>
-        <div>
-          <h3>3. Pay with protection</h3>
+      <ol class="steps">
+        <li>
+          <h3>Pick a card</h3>
+          <p>If it has an eBay listing you check out there, with eBay's money back guarantee. Otherwise send an offer.</p>
+        </li>
+        <li>
+          <h3>See the real one</h3>
+          <p>Ask for front, back and corner photos with your name on a note. Graded cards come with the cert number to look up.</p>
+        </li>
+        <li>
+          <h3>Pay with protection</h3>
           <ul id="payments"></ul>
-        </div>
-        <div>
-          <h3>4. Shipping</h3>
+        </li>
+        <li>
+          <h3>It ships tracked</h3>
           <p id="shipping"></p>
-        </div>
-      </div>
-      <p class="fine">Cash only on the seller side: no trades for store credit. Conditions follow the TCGplayer scale (NM, LP, MP, HP, DMG).</p>
+        </li>
+      </ol>
+      <p class="fine">Cash sales only, no trades for store credit. Conditions use the TCGplayer scale: Near Mint, Lightly Played, Moderately Played, Heavily Played, Damaged.</p>
     </section>
   </main>
 
   <footer>
     <p>A private collector's page. Not affiliated with, sponsored or endorsed by Nintendo, Creatures, GAME FREAK or The Pokémon Company. Card names and images belong to their owners. Card data from <a href="https://tcgdex.dev" target="_blank" rel="noopener">TCGdex</a>.</p>
   </footer>
+
+  <dialog id="detail" aria-labelledby="d-name">
+    <button type="button" class="close" id="d-close" aria-label="Close">Close</button>
+    <div class="detail">
+      <div class="detail-art"><div class="holo big" id="d-art"></div></div>
+      <div class="detail-info">
+        <h2 id="d-name"></h2>
+        <p id="d-meta" class="meta"></p>
+        <p id="d-cond" class="chip"></p>
+        <p id="d-note" class="note"></p>
+        <p class="ask-row"><span id="d-ask" class="sticker big"></span><span id="d-market" class="market"></span></p>
+        <div id="d-action"></div>
+        <p class="sold-label">See what it actually sells for</p>
+        <p id="d-sales" class="sales"></p>
+      </div>
+    </div>
+  </dialog>
 
   <script src="core.js"></script>
   <script src="app.js"></script>
