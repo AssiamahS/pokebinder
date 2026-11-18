@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Payout math</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <p class="eyebrow">Seller notes · not linked from the binder</p>
+    <h1>Payout math</h1>
+    <p class="lede">What the available cards would net through each way out, from live market prices. Estimates: check each platform's fee page before you commit.</p>
+    <nav><a href="./">Back to the binder</a></nav>
+  </header>
+  <main>
+    <p class="fine">Market value of available cards</p>
+    <p class="total" id="total">…</p>
+    <p class="fine" id="basis"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Route</th><th class="num">You keep</th><th class="num">Net</th><th>Paid as</th><th>Speed</th></tr></thead>
+        <tbody id="routes"></tbody>
+      </table>
+    </div>
+    <h2 style="margin-top:40px">Card by card</h2>
+    <p class="fine">eBay takes about 15% all in, so a $100 card listed at $100 nets about $85. To walk away with full market, list at the last column. A shop paying 70% cash hands you $70 today.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Card</th><th class="num">Market</th><th class="num">Shop cash 50 to 70%</th><th class="num">eBay net at market</th><th class="num">List on eBay to net market</th><th>Check sold prices</th></tr></thead>
+        <tbody id="cards"></tbody>
+      </table>
+    </div>
+    <p class="fine">Shop rates are ranges published on store buylist pages (cash roughly 50 to 60% of market for raw singles, credit about 10 points higher, graded slabs 65 to 75%). Shops pay less for played cards and for stock they already have. Marketplace rows are before shipping supplies and postage.</p>
+  </main>
+  <script src="core.js"></script>
+  <script>
+    // [route, low keep, high keep, paid as, speed]
+    const EBAY_KEEP = 0.85;
+    const ROUTES = [
+      ['Direct sale (PayPal G&S ~3.5%)', 0.965, 0.965, 'Cash', 'Slow, you find the buyer'],
+      ['TCGplayer (~10.25% + ~2.5% + $0.30)', 0.87, 0.87, 'Cash', 'Weeks, card by card'],
+      ['eBay (~15% all in)', EBAY_KEEP, EBAY_KEEP, 'Cash', 'Days to weeks'],
+      ['Local shop, store credit', 0.60, 0.70, 'Store credit only', 'Same day'],
+      ['Local shop, cash', 0.50, 0.60, 'Cash or check', 'Same day'],
+      ['Online buylist, cash', 0.50, 0.65, 'PayPal, check or wire', 'About a week after they grade it'],
+    ];
+    loadBinder().then(({ cards }) => {
+      const live = cards.filter(c => (c.status || 'available') === 'available');
+      const priced = live.filter(c => c.market != null);
+      const total = priced.reduce((sum, c) => sum + c.market * (c.qty || 1), 0);
+      document.getElementById('total').textContent = usd(total);
+      document.getElementById('basis').textContent =
+        `${priced.length} of ${live.length} available listings have a market price. Graded cards are valued at the raw price here, so slabs are understated.`;
+      document.getElementById('cards').innerHTML = priced.map(c => `<tr>
+        <td>${esc(c.name)} <span style="color:var(--muted)">${esc(c.grade || c.condition || '')}</span></td>
+        <td class="num">${usd(c.market)}</td>
+        <td class="num">${usd(c.market * 0.5)} to ${usd(c.market * 0.7)}</td>
+        <td class="num">${usd(c.market * EBAY_KEEP)}</td>
+        <td class="num">${usd(c.market / EBAY_KEEP)}</td>
+        <td>${salesHtml(c)}</td>
+      </tr>`).join('');
+      document.getElementById('routes').innerHTML = ROUTES.map(([name, lo, hi, paid, speed], i) => {
+        const pct = lo === hi ? `${Math.round(lo * 100)}%` : `${Math.round(lo * 100)} to ${Math.round(hi * 100)}%`;
+        const net = lo === hi ? usd(total * lo) : `${usd(total * lo)} to ${usd(total * hi)}`;
+        return `<tr${i === 0 ? ' class="best"' : ''}><td>${esc(name)}</td><td class="num">${pct}</td><td class="num">${net}</td><td>${esc(paid)}</td><td>${esc(speed)}</td></tr>`;
+      }).join('');
+    }).catch(err => { document.getElementById('total').textContent = 'Could not load: ' + err.message; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "base1-4",
+    "condition": "LP",
+    "qty": 1,
+    "ask": 850,
+    "listing": "",
+    "status": "available",
+    "note": "Unlimited holo. Light edge wear, no creases."
+  },
+  {
+    "id": "swsh7-215",
+    "condition": "NM",
+    "grade": "PSA 10",
+    "qty": 1,
+    "ask": null,
+    "listing": "",
+    "status": "available",
+    "note": "Moonbreon alt art."
+  },
+  {
+    "id": "sv03.5-199",
+    "condition": "NM",
+    "qty": 2,
+    "ask": 270,
+    "listing": "",
+    "status": "available",
+    "note": "Pack fresh, sleeved since opening."
+  },
+  {
+    "id": "base1-2",
+    "condition": "MP",
+    "qty": 1,
+    "ask": 120,
+    "listing": "",
+    "status": "sold",
+    "note": "Blastoise holo."
+  }
+]
