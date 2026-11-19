@@ -26,6 +26,41 @@ function offerLink(card) {
   return null;
 }
 
+const safeUrl = u => (/^https:\/\//.test(u || '') ? u : '');
+
+// Buy now goes to a hosted checkout page (Stripe or PayPal payment link), so
+// no card numbers ever touch this site. Offer/eBay stays as the second option.
+function actionHtml(card) {
+  if (isSold(card)) return '<p class="note">This one has found a new home.</p>';
+  const parts = [];
+  const checkout = safeUrl(card.checkout);
+  if (checkout && card.ask != null) {
+    parts.push(`<a class="btn" href="${esc(checkout)}" target="_blank" rel="noopener">Buy now for ${usd(card.ask)}</a>`);
+  }
+  const link = offerLink(card);
+  if (link) {
+    parts.push(`<a class="${parts.length ? 'quiet' : 'btn'}" href="${esc(link.href)}"${link.external ? ' target="_blank" rel="noopener"' : ''}>${link.label}</a>`);
+  }
+  if (!parts.length) return '<p class="note">Contact details are being added. Check back soon to send an offer.</p>';
+  const secure = checkout ? '<p class="note">Checkout opens on a secure payment page. Cards and Apple Pay accepted.</p>' : '';
+  return `<p class="actions">${parts.join('')}</p>${secure}`;
+}
+
+function renderReceipts() {
+  const sold = state.cards.filter(isSold).sort((a, b) => String(b.soldOn || '').localeCompare(String(a.soldOn || '')));
+  $('#sold').hidden = !sold.length;
+  $('#receipts').innerHTML = sold.map(c => {
+    const proof = safeUrl(c.proof);
+    return `<tr>
+      <td>${esc(c.name)} <span class="dim">${esc(setLine(c))}</span></td>
+      <td class="num">${c.soldPrice != null ? usd(c.soldPrice) : ''}</td>
+      <td>${esc(c.soldOn || '')}</td>
+      <td>${esc(c.soldVia || '')}</td>
+      <td>${proof ? `<a href="${esc(proof)}" target="_blank" rel="noopener">See the sale</a>` : '<span class="dim">On request</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
 function pocketHtml(card) {
   const sold = isSold(card);
   return `<button type="button" class="pocket${sold ? ' sold' : ''}" data-id="${esc(card.id)}">
@@ -69,7 +104,6 @@ function renderFan() {
 function openCard(id) {
   const card = state.cards.find(c => c.id === id);
   if (!card) return;
-  const link = isSold(card) ? null : offerLink(card);
   $('#d-art').innerHTML = art(card);
   $('#d-name').textContent = card.name;
   $('#d-meta').textContent = [setLine(card), card.rarity].filter(Boolean).join(', ');
@@ -78,11 +112,7 @@ function openCard(id) {
   $('#d-ask').textContent = askText(card);
   $('#d-market').textContent = card.market != null ? `Market price ${usd(card.market)}` : '';
   $('#d-sales').innerHTML = salesHtml(card);
-  $('#d-action').innerHTML = isSold(card)
-    ? '<p class="note">This one has found a new home.</p>'
-    : link
-      ? `<a class="btn" href="${esc(link.href)}"${link.external ? ' target="_blank" rel="noopener"' : ''}>${link.label}</a>`
-      : '<p class="note">Contact details are being added. Check back soon to send an offer.</p>';
+  $('#d-action').innerHTML = actionHtml(card);
   const dialog = $('#detail');
   if (!dialog.open) dialog.showModal();
   history.replaceState(null, '', '#' + encodeURIComponent(id));
@@ -131,6 +161,7 @@ async function main() {
     fillSite(site);
     renderFan();
     render();
+    renderReceipts();
     const wanted = decodeURIComponent(location.hash.slice(1));
     if (cards.some(c => c.id === wanted)) openCard(wanted);
   } catch (err) {

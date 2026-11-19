@@ -6,6 +6,13 @@
   <title>The binder</title>
   <meta name="description" content="A personal Pokemon card collection for sale. Real cards, photos on request, checkout through eBay or direct offer.">
   <meta name="theme-color" content="#131c4a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Binder">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
@@ -20,6 +27,7 @@
       <p class="hero-links">
         <a class="btn" href="#binder">Open the binder</a>
         <a class="quiet" href="#how">How buying works</a>
+        <a class="quiet" href="#sold">Sold so far</a>
         <a class="quiet" id="ebay" href="#" target="_blank" rel="noopener" hidden>eBay feedback</a>
       </p>
     </div>
@@ -49,7 +57,7 @@
       <ol class="steps">
         <li>
           <h3>Pick a card</h3>
-          <p>If it has an eBay listing you check out there, with eBay's money back guarantee. Otherwise send an offer.</p>
+          <p>Buy now pays on a secure checkout page. Cards listed on eBay check out there with eBay's money back guarantee. Or send an offer.</p>
         </li>
         <li>
           <h3>See the real one</h3>
@@ -65,6 +73,17 @@
         </li>
       </ol>
       <p class="fine">Cash sales only, no trades for store credit. Conditions use the TCGplayer scale: Near Mint, Lightly Played, Moderately Played, Heavily Played, Damaged.</p>
+    </section>
+
+    <section id="sold" class="how" hidden>
+      <h2>Sold so far</h2>
+      <p class="fine lead">Every card that has left the binder, with what it went for and where the sale happened.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Card</th><th class="num">Sold for</th><th>Date</th><th>Where</th><th>Proof</th></tr></thead>
+          <tbody id="receipts"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 

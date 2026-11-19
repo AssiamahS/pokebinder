@@ -6,7 +6,8 @@
     "ask": 850,
     "listing": "",
     "status": "available",
-    "note": "Unlimited holo. Light edge wear, no creases."
+    "note": "Unlimited holo. Light edge wear, no creases.",
+    "checkout": ""
   },
   {
     "id": "swsh7-215",
@@ -16,7 +17,8 @@
     "ask": null,
     "listing": "",
     "status": "available",
-    "note": "Moonbreon alt art."
+    "note": "Moonbreon alt art.",
+    "checkout": ""
   },
   {
     "id": "sv03.5-199",
@@ -25,7 +27,8 @@
     "ask": 270,
     "listing": "",
     "status": "available",
-    "note": "Pack fresh, sleeved since opening."
+    "note": "Pack fresh, sleeved since opening.",
+    "checkout": ""
   },
   {
     "id": "base1-2",
@@ -34,6 +37,11 @@
     "ask": 120,
     "listing": "",
     "status": "sold",
-    "note": "Blastoise holo."
+    "note": "Blastoise holo.",
+    "checkout": "",
+    "soldPrice": 120,
+    "soldOn": "2026-10-30",
+    "soldVia": "eBay",
+    "proof": ""
   }
 ]

@@ -1,13 +1,13 @@
 # pokebinder
 
 A storefront window for one person's Pokemon card collection. It shows what is
-for sale, what condition it is in and what it is worth. It does not take
-payment: checkout happens on eBay or by direct offer, the same way a record
-collector links their Discogs or eBay listings from a personal page.
+for sale, what condition it is in and what it is worth. Checkout runs on
+hosted payment links, eBay or direct offer, so the site itself never handles
+card numbers.
 
 Live: https://assiamahs.github.io/pokebinder/
 
-## Why no checkout on the site
+## Why checkout is hosted, not built in
 
 A stranger has no reason to send money to an unknown personal site. eBay and
 PayPal Goods & Services give the buyer protection and give the seller a
@@ -29,6 +29,8 @@ Edit `cards.json`. Each row is one listing:
 | `ask` | asking price in USD, or `null` for "open to offers" |
 | `listing` | eBay listing URL. When set, the button becomes "Buy on eBay" |
 | `status` | `available` or `sold` |
+| `checkout` | hosted payment link for this card (Stripe Payment Link or PayPal). When set with an `ask`, the card gets a "Buy now" button |
+| `soldPrice`, `soldOn`, `soldVia`, `proof` | for sold cards: price, date, where, and an https link to the sale (eBay item or feedback). Fills the "Sold so far" table |
 | `cert` | optional PSA cert number, adds a cert lookup link |
 | `note` | one line about this copy |
 
@@ -37,6 +39,22 @@ browser for 12 hours). No API key, no build step.
 
 Edit `site.json` for the owner name, contact email, eBay username, payment
 methods and shipping text. Set `"sample": false` once the real cards are in.
+
+## Selling straight from the site
+
+The page is static, so payment runs on a hosted checkout page and no card
+numbers touch this site. In Stripe: Payment Links, new link, one product per
+card, set the price, turn on "limit the number of payments" to 1 so a single
+card cannot be bought twice, collect the shipping address. Paste the link
+into that card's `checkout` field. PayPal payment links work the same way.
+
+After a sale set `status` to `sold` and fill the sold fields. That table is
+the track record new buyers look at.
+
+## Install it like an app
+
+Open the site on a phone, Share, Add to Home Screen. It gets its own icon and
+opens full screen (`manifest.webmanifest`, `icon-*.png`).
 
 ## Run locally
 
